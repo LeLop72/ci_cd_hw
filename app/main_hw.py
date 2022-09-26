@@ -1,11 +1,10 @@
-from typing import Optional, List, Any, Dict, Type
+from typing import Dict, List, Optional
 
 from fastapi import FastAPI, HTTPException, Path
 from sqlalchemy import update
 from sqlalchemy.engine import Engine
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.future import select
-
 from starlette import status
 
 from app.config_db import engine, local_session
@@ -108,10 +107,10 @@ async def get_meal_by_id(
         res_1 = res.scalar()
         new_counter = res_1.counter + 1
         q = (
-            update(Recipe)
-                .where(Recipe.id == recipe_id)
-                .values(counter=new_counter)
-                .execution_options(synchronize_session="fetch")
+            update(Recipe)  # type: ignore
+            .where(Recipe.id == recipe_id)
+            .values(counter=new_counter)
+            .execution_options(synchronize_session="fetch")
         )
         await local_session.execute(q)
         await local_session.flush()

@@ -1,7 +1,8 @@
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative.api import DeclarativeMeta
+from sqlalchemy.orm import sessionmaker
+
 DATABASE_URL = "sqlite+aiosqlite:///./recipe.db"
 
 engine = create_async_engine(DATABASE_URL, future=True, echo=True)
