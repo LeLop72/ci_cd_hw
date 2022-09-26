@@ -1,3 +1,4 @@
+import os
 from app.main_hw import app
 from app.models_hw import Recipe
 from fastapi.testclient import TestClient
@@ -27,6 +28,13 @@ def test_get_meals():
         assert len(response.json()) == len(all_recipes)
 
 
+def test_add_recipe():
+    with client:
+        response = client.post("/recipes/", json=data_to_add)
+        assert response.status_code == 201
+        assert response.json() == data_to_add
+
+
 def test_get_meal_by_id():
     with client:
         response = client.put("/recipes/1")
@@ -39,10 +47,7 @@ def test_get_meal_by_id():
         }
         assert response.status_code == 200
         assert response.json() == recipe_output
+        os.remove("recipe.db")
 
 
-def test_add_recipe():
-    with client:
-        response = client.post("/recipes/", json=data_to_add)
-        assert response.status_code == 201
-        assert response.json() == data_to_add
+
