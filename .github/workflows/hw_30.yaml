@@ -1,0 +1,42 @@
+name: Python package
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Lint with flake8
+        run: |
+          flake8 app/
+        continue-on-error: true
+      - name: Lint with black
+        run: |
+          black app/
+        continue-on-error: true
+        
+      - name: Lint with isort
+        run: |
+          isort --profile black app/
+        continue-on-error: true
+        
+      - name: Lint with mypy
+        run: |
+          mypy app/
+        continue-on-error: true
+        
+      - name: test with pytest
+        run: |
+          pytest tests/
+        continue-on-error: true
