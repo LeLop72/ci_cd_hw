@@ -1,5 +1,4 @@
 from typing import Dict, List, Optional
-
 from fastapi import FastAPI, HTTPException, Path
 from sqlalchemy import update
 from sqlalchemy.engine import Engine
@@ -32,14 +31,14 @@ test_data = [
 test_obj = [Recipe(**test_data[0]), Recipe(**test_data[1])]
 
 
-async def create_db(local_engine: Engine = engine) -> None:
+async def create_db(local_engine: Engine = engine, base=Base) -> None:
     """
     drops if exists and creates db for testing
 
     """
     async with local_engine.begin() as conn:
-        await conn.run_sync(Base.metadata.drop_all)
-        await conn.run_sync(Base.metadata.create_all)
+        await conn.run_sync(base.metadata.drop_all)
+        await conn.run_sync(base.metadata.create_all)
 
 
 @app.on_event("startup")
@@ -105,6 +104,8 @@ async def get_meal_by_id(
         res = await local_session.execute(
             select(Recipe).where(Recipe.id == recipe_id))
         res_1 = res.scalar()
+        print(res_1)
+
         new_counter = res_1.counter + 1
         q = (
             update(Recipe)  # type: ignore
