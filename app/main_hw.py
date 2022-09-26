@@ -137,6 +137,7 @@ async def add_recipe(recipe: OneRecipe) -> Recipe:
         except IntegrityError:
             await local_session.rollback()
             raise HTTPException(
-                status_code=status.HTTP_409_CONFLICT("such a name exists")
+                status_code=status.HTTP_409_CONFLICT(
+                    "such a name exists")  # type: ignore
             )
     return new_recipe
